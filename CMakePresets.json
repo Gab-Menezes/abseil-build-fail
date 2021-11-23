@@ -1,0 +1,140 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    //--------------- Base ---------------
+    {
+      "name": "base-preset",
+      "description": "Base configuration (generator, build, install, vcpkg)",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake"
+        }
+      },
+      "environment": {
+        "VCPKG_FEATURE_FLAGS": "manifests,versions,binarycaching,registries"
+      }
+    },
+
+    //--------------- Linux ---------------
+    {
+      "name": "linux-base",
+      "inherits": [ "base-preset" ],
+      "hidden": true,
+      "description": "Base Linux preset",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_C_COMPILER": "gcc"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ],
+          "intelliSenseMode": "linux-gcc-x64"
+        }
+      }
+    },
+    {
+      "name": "linux-x64-debug",
+      "inherits": [ "linux-base" ],
+      "description": "Linux x64 Debug",
+      "displayName": "Linux x64 Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-x64-release",
+      "inherits": [ "linux-base" ],
+      "description": "Linux x64 Release",
+      "displayName": "Linux x64 Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+
+    //--------------- WINDOWS ---------------
+    {
+      "name": "windows-base",
+      "inherits": [ "base-preset" ],
+      "hidden": true,
+      "description": "Base Windows preset",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Windows" ]
+
+        }
+      }
+    },
+    {
+      "name": "windows-x64-debug",
+      "inherits": [ "windows-base" ],
+      "description": "Windows x64 Debug",
+      "displayName": "Windows x64 Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-x64-release",
+      "inherits": [ "windows-base" ],
+      "description": "Windows x64 Release",
+      "displayName": "Windows x64 Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "base-build",
+      "description": "Base build",
+      "configurePreset": "base-preset",
+      "hidden": true
+    },
+    {
+      "name": "windows-clean-build",
+      "description": "Clean before build (--clean-first)",
+      "cleanFirst": true,
+      "inherits": "base-build",
+      "configurePreset": "windows-x64-release"
+    },
+    {
+      "name": "linux-clean-build",
+      "description": "Clean before build (--clean-first)",
+      "cleanFirst": true,
+      "inherits": "base-build",
+      "configurePreset": "linux-x64-release"
+    },
+    {
+      "name": "windows-verbose-build",
+      "description": "Passes -v",
+      "verbose": true,
+      "inherits": "base-build",
+      "configurePreset": "windows-x64-debug"
+    },
+    {
+      "name": "linux-verbose-build",
+      "description": "Passes -v",
+      "verbose": true,
+      "inherits": "base-build",
+      "configurePreset": "linux-x64-debug"
+    }
+  ]
+}

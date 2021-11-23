@@ -1,0 +1,12 @@
+{
+  "name": "abseil-build-fail",
+  "version-string": "0.0.1",
+  "dependencies": [
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    }
+  ]
+}
