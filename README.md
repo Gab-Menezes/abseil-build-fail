@@ -7,7 +7,7 @@
 6. g++11 (wsl)
 
 **How to compile**
-1. Open VS2022 change to the disered target
+1. Open VS2022 change to the desired target
 
 **Behaviour**
 
